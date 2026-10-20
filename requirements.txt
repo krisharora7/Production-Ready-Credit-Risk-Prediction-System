@@ -5,6 +5,7 @@ numpy
 joblib
 scikit-learn = 1.7.1
 pydantic>=2
+xgboost
 # IMPORTANT: pin scikit-learn (and any other training libs, e.g. xgboost/lightgbm)
 # to the EXACT versions you trained credit_risk_model.pkl with, e.g.:
 # scikit-learn==1.5.2
