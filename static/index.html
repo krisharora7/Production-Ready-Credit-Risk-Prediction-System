@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Credit Risk Scorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+
+<header class="top">
+  <h1>Credit risk scorer</h1>
+  <p>Enter a loan application and get the model's default probability in seconds.</p>
+</header>
+
+<main class="layout">
+  <form id="form" class="panel" novalidate>
+    <fieldset>
+      <legend>Applicant</legend>
+      <div class="grid">
+        <label>Age<input type="number" name="person_age" min="18" max="100" value="30" required></label>
+        <label>Annual income ($)<input type="number" name="person_income" min="1" step="any" value="60000" required></label>
+        <label>Home ownership
+          <select name="person_home_ownership">
+            <option>RENT</option><option>OWN</option><option>MORTGAGE</option><option>OTHER</option>
+          </select>
+        </label>
+        <label>Employment length (years)<input type="number" name="person_emp_length" min="0" step="any" value="4" required></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Loan</legend>
+      <div class="grid">
+        <label>Purpose
+          <select name="loan_intent">
+            <option value="PERSONAL">Personal</option>
+            <option value="EDUCATION">Education</option>
+            <option value="MEDICAL">Medical</option>
+            <option value="VENTURE">Venture</option>
+            <option value="HOMEIMPROVEMENT">Home improvement</option>
+            <option value="DEBTCONSOLIDATION">Debt consolidation</option>
+          </select>
+        </label>
+        <label>Loan amount<input type="number" name="loan_amnt" min="1" step="any" value="12000" required></label>
+        <label>Interest rate (%)<input type="number" name="loan_int_rate" min="0" step="any" value="11.5" required></label>
+        <label>Share of income <small>(auto)</small><input type="number" name="loan_percent_income" readonly tabindex="-1"></label>
+      </div>
+      <div class="field">
+        <span class="lbl">Loan grade</span>
+        <div class="chips" id="grades" role="radiogroup" aria-label="Loan grade"></div>
+        <input type="hidden" name="loan_grade" value="B">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Credit history</legend>
+      <div class="grid">
+        <div class="field">
+          <span class="lbl">Previous default on file</span>
+          <div class="seg" id="default-seg" role="radiogroup">
+            <button type="button" data-v="N" class="on" role="radio" aria-checked="true">No</button>
+            <button type="button" data-v="Y" role="radio" aria-checked="false">Yes</button>
+            <i></i>
+          </div>
+          <input type="hidden" name="cb_person_default_on_file" value="N">
+        </div>
+        <label>Credit history length (years)<input type="number" name="cb_person_cred_hist_length" min="0" value="6" required></label>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="submit" class="btn" id="submit"><span>Check risk</span><span class="spin"></span></button>
+      <div class="samples">Try a sample:
+        <button type="button" data-sample="safe">Steady earner</button>
+        <button type="button" data-sample="risky">Stretched borrower</button>
+      </div>
+    </div>
+    <p id="error" class="error" role="alert" hidden></p>
+  </form>
+
+  <aside class="result" id="result" aria-live="polite">
+    <div class="gauge-wrap">
+      <svg viewBox="0 0 240 150" class="gauge" aria-hidden="true">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1">
+            <stop offset="0" stop-color="#2dd4a0"/><stop offset=".5" stop-color="#f5c451"/><stop offset="1" stop-color="#ff5d6c"/>
+          </linearGradient>
+        </defs>
+        <path d="M 20 120 A 100 100 0 0 1 220 120" class="track"/>
+        <path d="M 20 120 A 100 100 0 0 1 220 120" class="fill" id="arc"/>
+        <g id="thr"><line x1="14" y1="120" x2="34" y2="120"/></g>
+        <g id="needle"><line x1="120" y1="120" x2="40" y2="120"/><circle cx="120" cy="120" r="7"/></g>
+      </svg>
+      <div class="readout">
+        <div class="pct"><span id="pct">--</span><small>%</small></div>
+        <div class="cap">chance of default</div>
+      </div>
+    </div>
+
+    <div class="verdict" id="verdict">Waiting for an application</div>
+
+    <dl class="facts">
+      <div><dt>Decision cut-off</dt><dd id="thr-val">--</dd></div>
+      <div><dt>Model output</dt><dd id="raw-val">--</dd></div>
+    </dl>
+    <p class="note" id="note">Fill in the form and press “Check risk”. The white tick on the dial marks the model's cut-off: scores past it are flagged high risk.</p>
+  </aside>
+</main>
+
+<footer>Model predictions are statistical estimates and should support, not replace, a human credit decision.</footer>
+<script src="/script.js"></script>
+</body>
+</html>
