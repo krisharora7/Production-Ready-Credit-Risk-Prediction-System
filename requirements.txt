@@ -3,7 +3,7 @@ uvicorn[standard]
 pandas
 numpy
 joblib
-scikit-learn = 1.7.1
+scikit-learn==1.7.1
 pydantic>=2
 xgboost
 # IMPORTANT: pin scikit-learn (and any other training libs, e.g. xgboost/lightgbm)
